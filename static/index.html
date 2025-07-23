@@ -1,0 +1,1013 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title id="dynamic-title">BTCUSD Trading Platform Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="trade_view.css" />
+  </head>
+  <body>
+    <header class="top-navbar" id="market-header" style="display: none">
+      <i class="fas fa-bars" id="menu-toggle-market"></i>
+      <span class="title" id="market-watch-title" style="cursor: pointer"
+        >Market Watch</span
+      >
+      <div class="actions">
+        <i class="fas fa-plus"></i>
+        <i class="fas fa-sync-alt"></i>
+      </div>
+    </header>
+
+    <header class="chart-header-modern" id="chart-header-new">
+      <div class="chart-nav-top">
+        <div class="chart-nav-left">
+          <i class="fas fa-bars menu-icon" id="menu-toggle-chart"></i>
+        </div>
+        <div class="chart-nav-center">
+        </div>
+        <div class="chart-nav-right">
+          <div class="chart-tools">
+          </div>
+        </div>
+      </div>
+      <div class="price-display-bar">
+        <div class="price-buttons">
+          <button
+            class="price-btn sell"
+            onclick="openTradeModal('sell')"
+            id="chart-sell-btn"
+          >
+            <span class="label">SELL</span>
+            <span class="value" id="sell-price"
+              >0.00<span class="decimal">0</span></span
+            >
+          </button>
+          <button
+            class="price-btn buy"
+            onclick="openTradeModal('buy')"
+            id="chart-buy-btn"
+          >
+            <span class="label">BUY</span>
+            <span class="value" id="buy-price"
+              >0.00<span class="decimal">0</span></span
+            >
+          </button>
+        </div>
+        <div class="lot-control-modern">
+          <button class="lot-btn-modern" onclick="adjustLotSize(-0.01)">
+            -
+          </button>
+          <span
+            class="lot-value-modern"
+            onclick="openLotModal()"
+            id="current-lot"
+            >0.01</span
+          >
+          <button class="lot-btn-modern" onclick="adjustLotSize(0.01)">
+            +
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <header class="top-navbar" id="trade-header" style="display: none">
+      <div style="display: flex; align-items: center; gap: 1rem">
+        <i class="fas fa-bars" id="menu-toggle-trade"></i>
+        <div class="trade-header-content">
+          <div class="trade-title">Trade</div>
+          <div class="trade-balance-header" id="trade-balance-header">
+            $0.00
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <i class="fas fa-calculator"></i>
+        <i class="fas fa-cog"></i>
+      </div>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-profile" id="guest-profile">
+        <div class="profile-icon">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">Guest User</div>
+          <div class="profile-id">Please login to continue</div>
+        </div>
+      </div>
+      <div class="sidebar-profile" id="user-profile" style="display: none">
+        <div class="profile-icon">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="profile-info">
+          <div class="profile-name" id="sidebar-username">TRADER PRO</div>
+          <div class="profile-id" id="sidebar-userid">ID: 123456789</div>
+        </div>
+      </div>
+      <div id="auth-section">
+        <div style="padding: 15px; border-bottom: 1px solid #e5e7eb">
+          <button
+            onclick="showLoginModal()"
+            style="
+              width: 100%;
+              padding: 10px;
+              background: #0d6efd;
+              color: white;
+              border: none;
+              border-radius: 6px;
+              cursor: pointer;
+              font-size: 0.9rem;
+              font-weight: 600;
+              margin-bottom: 8px;
+            "
+          >
+            <i class="fas fa-sign-in-alt"></i> Masuk
+          </button>
+          <button
+            onclick="showRegisterModal()"
+            style="
+              width: 100%;
+              padding: 10px;
+              background: #28a745;
+              color: white;
+              border: none;
+              border-radius: 6px;
+              cursor: pointer;
+              font-size: 0.9rem;
+              font-weight: 600;
+            "
+          >
+            <i class="fas fa-user-plus"></i> Daftar
+          </button>
+        </div>
+      </div>
+      <div id="account-management" style="display: none">
+        <a href="#" class="manage-account" onclick="showAccountModal()">
+          <i class="fas fa-user-cog"></i> Mengelola Akun
+        </a>
+        <a href="#" class="manage-account" onclick="showTopUpModal()">
+          <i class="fas fa-wallet"></i> Top Up & Withdraw
+        </a>
+        <a href="#" class="manage-account" onclick="showTransactionHistory()">
+          <i class="fas fa-history"></i> Riwayat Transaksi
+        </a>
+      </div>
+      <nav class="sidebar-menu">
+        <a href="#" onclick="switchView('chart-view')"
+          ><i class="fas fa-chart-line"></i> Trade</a
+        >
+        <a href="#" onclick="showNewsModal()"
+          ><i class="fas fa-newspaper"></i> Berita</a
+        >
+        <a href="#" onclick="showMailboxModal()">
+          <i class="fas fa-envelope"></i> Kotak Surat
+          <span class="badge" id="mail-count">5</span>
+        </a>
+        <a href="#" onclick="showAnalysisModal()"
+          ><i class="fas fa-chart-bar"></i> Analisis</a
+        >
+        <a href="#" onclick="showSettingsModal()"
+          ><i class="fas fa-cog"></i> Pengaturan</a
+        >
+        <a href="#" onclick="showEconomicCalendar()"
+          ><i class="fas fa-calendar-alt"></i> Kalender Ekonomi</a
+        >
+        <a href="#" onclick="showCommunityModal()"
+          ><i class="fas fa-users"></i> Komunitas</a
+        >
+        <a href="#" onclick="showAITradingModal()"
+          ><i class="fas fa-robot"></i> AI Trading</a
+        >
+        <a href="#" onclick="showHelpModal()"
+          ><i class="fas fa-question-circle"></i> Bantuan</a
+        >
+        <a
+          href="#"
+          onclick="logout()"
+          id="logout-btn"
+          style="display: none; color: #dc3545"
+        >
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <main>
+      <div id="market-view" class="view-content">
+      <div class="quote-list" id="quote-list"></div>
+      </div>
+
+      <div id="chart-view" class="view-content active">
+        <div class="tradingview-widget-container" style="height: 100%; width: 100%">
+          <div id="tradingview_chart" style="height: calc(100% - 32px); width: 100%"></div>
+        </div>
+      </div>
+
+      <div id="trade-view" class="view-content">
+        <div class="account-info-new">
+          <div class="account-row">
+            <span class="account-label">Saldo:</span>
+            <span class="account-value" id="account-saldo">$0.00</span>
+          </div>
+          <div class="account-row">
+            <span class="account-label">Ekuitas:</span>
+            <span class="account-value" id="account-ekuitas">$0.00</span>
+          </div>
+           <div class="account-row">
+            <span class="account-label">Profit/Loss:</span>
+            <span class="account-value" id="account-pnl">$0.00</span>
+          </div>
+          <div class="account-row">
+            <span class="account-label">Margin Level:</span>
+            <span class="account-value" id="account-margin-level">N/A</span>
+          </div>
+        </div>
+        <div class="trades-section">
+          <div class="trades-header">
+            Posisi & Riwayat
+            <button id="close-all-btn" style="padding: 4px 8px; font-size: 0.8rem; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; float: right;">Close All</button>
+          </div>
+          <div id="trades-list">
+            <div style="padding: 20px; text-align: center; color: #666;">
+              Tidak ada posisi atau riwayat
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div class="bottom-nav">
+      <a href="#" class="nav-item" data-view="market-view">
+        <i class="fas fa-exchange-alt fa-rotate-90"></i>
+        <span>Quote</span>
+      </a>
+      <a href="#" class="nav-item active" data-view="chart-view">
+        <i class="fas fa-chart-bar"></i>
+        <span>Chart</span>
+      </a>
+      <a href="#" class="nav-item" data-view="trade-view">
+        <i class="fas fa-chart-line"></i>
+        <span>Trade</span>
+      </a>
+      <a href="#" class="nav-item" id="account-icon">
+        <i class="fas fa-comment-dots"></i>
+        <span>Pesan</span>
+        <span class="notification-badge" style="top: 2px; right: 25%">1</span>
+      </a>
+    </div>
+
+    <!-- Modals -->
+    <div id="trade-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="modal-title">Create New Order</h3>
+          <button class="close-modal" onclick="closeTradeModal()">&times;</button>
+        </div>
+        <form id="trade-form-modal" style="padding: 10px;">
+            <div class="form-group">
+                <label for="trade-type">Order Type</label>
+                <select id="trade-type" name="trade-type" class="form-control">
+                    <option value="buy">Market Buy</option>
+                    <option value="sell">Market Sell</option>
+                    <option value="buy_stop">Buy Stop</option>
+                    <option value="sell_stop">Sell Stop</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="trade-volume">Volume (Lots)</label>
+                <input type="number" id="trade-volume" name="volume" value="0.01" step="0.01" min="0.01" class="form-control">
+            </div>
+            <div class="form-group" id="trigger-price-group" style="display: none;">
+                <label for="trigger-price">Trigger Price</label>
+                <input type="number" id="trigger-price" name="trigger-price" step="0.01" placeholder="Price to trigger order" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="stop-loss">Stop Loss</label>
+                <input type="number" id="stop-loss" name="stop-loss" step="0.01" placeholder="Optional" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="take-profit">Take Profit</label>
+                <input type="number" id="take-profit" name="take-profit" step="0.01" placeholder="Optional" class="form-control">
+            </div>
+            <button type="submit" id="confirm-trade-btn" style="width: 100%; padding: 12px; background: #0d6efd; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; margin-top: 10px;">Place Order</button>
+        </form>
+      </div>
+    </div>
+    <div id="lot-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Set Lot Size</h3>
+          <button class="close-modal" onclick="closeLotModal()">&times;</button>
+        </div>
+        <div class="form-group">
+          <label>Lot Size</label>
+          <input type="number" id="lot-input" step="0.01" min="0.01" max="10" value="0.01"/>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 20px">
+          <button style="flex: 1; padding: 10px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer;" onclick="closeLotModal()">Cancel</button>
+          <button style="flex: 1; padding: 10px; background: #0d6efd; color: white; border: none; border-radius: 6px; cursor: pointer;" onclick="setLotSize()">Set</button>
+        </div>
+      </div>
+    </div>
+    <div id="login-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title"><i class="fas fa-sign-in-alt"></i> Masuk ke Akun</h3>
+          <button class="close-modal" onclick="closeAuthModal()">&times;</button>
+        </div>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-email"><i class="fas fa-user"></i> Email/Username</label>
+            <input type="text" id="login-email" placeholder="Masukkan email atau username" required/>
+          </div>
+          <div class="form-group">
+            <label for="login-password"><i class="fas fa-lock"></i> Kata Sandi</label>
+            <input type="password" id="login-password" placeholder="Masukkan kata sandi" required/>
+          </div>
+          <button type="submit" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #0d6efd, #0056b3); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);"><i class="fas fa-sign-in-alt"></i> Masuk</button>
+        </form>
+        <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e9ecef; margin-top: 10px;">
+          <p style="margin: 0; color: #666; font-size: 0.95rem; line-height: 1.5">Belum punya akun?<br /><a href="#" onclick="showRegisterModal()" style="color: #0d6efd; text-decoration: none; font-weight: 600; font-size: 1rem;">Daftar sekarang</a></p>
+        </div>
+      </div>
+    </div>
+    <div id="register-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title"><i class="fas fa-user-plus"></i> Daftar Akun Baru</h3>
+          <button class="close-modal" onclick="closeAuthModal()">&times;</button>
+        </div>
+        <form id="register-form">
+          <div class="form-group">
+            <label for="register-fullname"><i class="fas fa-user"></i> Nama Lengkap</label>
+            <input type="text" id="register-fullname" placeholder="Masukkan nama lengkap" required/>
+          </div>
+          <div class="form-group">
+            <label for="register-email"><i class="fas fa-envelope"></i> Email</label>
+            <input type="email" id="register-email" placeholder="Masukkan alamat email" required/>
+          </div>
+          <div class="form-group">
+            <label for="register-password"><i class="fas fa-lock"></i> Kata Sandi</label>
+            <input type="password" id="register-password" placeholder="Buat kata sandi (min. 8 karakter)" required minlength="8"/>
+          </div>
+          <button type="submit" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #28a745, #218838); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);"><i class="fas fa-user-plus"></i> Daftar Akun</button>
+        </form>
+        <div style="text-align: center; padding-top: 15px; border-top: 1px solid #e9ecef;">
+          <p style="margin: 0; color: #666; font-size: 0.9rem">Sudah punya akun?<a href="#" onclick="showLoginModal()" style="color: #0d6efd; text-decoration: none; font-weight: 600">Masuk di sini</a></p>
+        </div>
+      </div>
+    </div>
+    <div id="notification-container"></div>
+
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script src="api_client.js"></script>
+    <script>
+        let tradingApp = {
+            user: null,
+            currentPrice: { bid: 0, ask: 0, close: 0 },
+            currentLot: 0.01,
+            positions: [],
+            history: [],
+            isConnected: false,
+            currentSymbol: 'CRYPTO:BTCUSD',
+            currentSymbolDisplay: 'BTCUSD',
+            currentTradingViewSymbol: 'COINBASE:BTCUSD',
+            symbolMappings: {}
+        };
+
+        function connectWebSocket() {
+            const ws_protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const ws_url = `${ws_protocol}//${window.location.host}/ws`;
+            const ws = new WebSocket(ws_url);
+
+            ws.onopen = () => {
+                console.log("✅ WebSocket connected");
+                tradingApp.isConnected = true;
+                showNotification("Connected to market data", "success", 2000);
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.symbol && data.close) {
+                        updateDisplay(data);
+                        const closePrice = parseFloat(data.close);
+                        tradingApp.currentPrice = { bid: closePrice, ask: closePrice, close: closePrice };
+                        updatePrices(closePrice, closePrice);
+                        updatePositionsPnL();
+                    }
+                } catch (err) {
+                    console.error("❌ Failed to process WebSocket data:", err);
+                }
+            };
+
+            ws.onclose = () => {
+                console.warn("❌ WebSocket disconnected. Attempting to reconnect...");
+                tradingApp.isConnected = false;
+                showNotification("Disconnected from market. Reconnecting...", "error");
+                setTimeout(connectWebSocket, 5000);
+            };
+
+            ws.onerror = (error) => {
+                console.error("WebSocket error:", error);
+                showNotification("Connection error", "error");
+                ws.close();
+            };
+        }
+
+        function updateDisplay(data) {
+            const container = document.getElementById("quote-list");
+            if (!container) return;
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString("en-GB");
+            const direction = (data.change || 0) >= 0 ? "up" : "down";
+            const itemHTML = `
+                <div class="quote-card" data-symbol="${data.symbol}" onclick="selectSymbol('${data.symbol}')" style="cursor: pointer;">
+                  <div>
+                    <div class="symbol">${data.symbol}</div>
+                    <div class="time">${timeStr}</div>
+                  </div>
+                  <div class="price">
+                    <span class="${direction}">${parseFloat(data.close).toFixed(2)}</span>
+                    <div class="change ${direction}">${parseFloat(data.change || 0).toFixed(2)}%</div>
+                    <div class="light">L: ${parseFloat(data.low || 0).toFixed(2)} H: ${parseFloat(data.high || 0).toFixed(2)}</div>
+                  </div>
+                </div>`;
+            let item = container.querySelector(`[data-symbol="${data.symbol}"]`);
+            if (item) {
+                item.outerHTML = itemHTML;
+            } else {
+                container.innerHTML += itemHTML;
+            }
+        }
+
+        function selectSymbol(symbol) {
+            if (tradingApp.symbolMappings[symbol]) {
+                tradingApp.currentSymbol = symbol;
+                tradingApp.currentSymbolDisplay = tradingApp.symbolMappings[symbol].display;
+                tradingApp.currentTradingViewSymbol = tradingApp.symbolMappings[symbol].tradingView;
+                document.getElementById('dynamic-title').textContent = `${tradingApp.currentSymbolDisplay} Trading Platform Pro`;
+                if (window.tvWidget) {
+                    window.tvWidget.remove();
+                }
+                if (typeof TradingView !== 'undefined') {
+                    window.tvWidget = new TradingView.widget({
+                        "container_id": "tradingview_chart", "autosize": true, "symbol": tradingApp.currentTradingViewSymbol,
+                        "interval": "D", "timezone": "Etc/UTC", "theme": "light", "style": "1", "locale": "en",
+                        "enable_publishing": false, "allow_symbol_change": true, "hide_side_toolbar": true
+                    });
+                }
+                switchView('chart-view');
+            }
+        }
+        
+        function formatPriceForDisplay(price) {
+            const priceNum = parseFloat(price);
+            if (isNaN(priceNum)) return "0.00";
+            const priceStr = priceNum.toFixed(3);
+            const parts = priceStr.split(".");
+            return `${parts[0]}.${parts[1].slice(0,2)}<span class="decimal">${parts[1].slice(2)}</span>`;
+        }
+
+        function updatePrices(bid, ask) {
+            document.getElementById("sell-price").innerHTML = formatPriceForDisplay(bid);
+            document.getElementById("buy-price").innerHTML = formatPriceForDisplay(ask);
+        }
+
+        function updateAccountInfo() {
+            if (!tradingApp.user) {
+                document.getElementById('account-saldo').textContent = '$0.00';
+                document.getElementById('account-ekuitas').textContent = '$0.00';
+                document.getElementById('account-pnl').textContent = '$0.00';
+                document.getElementById('trade-balance-header').textContent = '$0.00';
+                document.getElementById('account-margin-level').textContent = 'N/A';
+                return;
+            }
+            const openPositions = tradingApp.positions.filter(p => p.status === 'open');
+            const totalPnL = openPositions.reduce((sum, pos) => sum + (pos.pnl || 0), 0);
+            const balance = tradingApp.user.balance || 0;
+            // Use equity from backend as it's the source of truth
+            const equity = tradingApp.user.equity || (balance + totalPnL);
+            // Example margin calculation: 1 lot = $1000 margin. In a real app, this would be more complex.
+            const marginUsed = openPositions.reduce((sum, pos) => sum + (pos.volume * 1000), 0); 
+            const marginLevel = marginUsed > 0 ? (equity / marginUsed) * 100 : 'N/A';
+
+            document.getElementById('account-saldo').textContent = `$${balance.toFixed(2)}`;
+            document.getElementById('account-ekuitas').textContent = `$${equity.toFixed(2)}`;
+            document.getElementById('account-pnl').textContent = `$${totalPnL.toFixed(2)}`;
+            document.getElementById('trade-balance-header').textContent = `$${equity.toFixed(2)}`;
+            document.getElementById('account-margin-level').textContent = (typeof marginLevel === 'number') ? `${marginLevel.toFixed(2)}%` : 'N/A';
+        }
+
+        function updatePositionsPnL() {
+            if (!tradingApp.user || !tradingApp.currentPrice?.close) return;
+            tradingApp.positions.forEach(pos => {
+                const closePrice = tradingApp.currentPrice.close;
+                const openPrice = pos.open_price || 0;
+                const volume = pos.volume || 0;
+                const tradeType = pos.trade_type || 'buy';
+                if (tradeType === 'buy') {
+                    pos.pnl = (closePrice - openPrice) * volume * 100;
+                } else {
+                    pos.pnl = (openPrice - closePrice) * volume * 100;
+                }
+            });
+            updateTradesList();
+            updateAccountInfo();
+        }
+
+        function toggleTradeDetails(element) {
+            const details = element.nextElementSibling;
+            if (details) {
+                details.style.display = details.style.display === 'block' ? 'none' : 'block';
+            }
+        }
+
+        function updateTradesList() {
+            const container = document.getElementById("trades-list");
+            if (!tradingApp.user) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">Silakan login untuk melihat posisi & riwayat</div>';
+                return;
+            }
+
+            const expandedTradeIds = new Set();
+            container.querySelectorAll('.trade-item-container').forEach(item => {
+                const details = item.querySelector('.trade-item-details');
+                if (details && details.style.display === 'block') {
+                    expandedTradeIds.add(item.dataset.tradeId);
+                }
+            });
+
+            const openPositions = tradingApp.positions.map(p => ({...p, isOpen: true, time: new Date(p.open_time)}));
+            const closedTrades = tradingApp.history.map(h => ({...h, isOpen: false, time: new Date(h.close_time)}));
+            
+            const allTrades = [...openPositions, ...closedTrades].sort((a, b) => (b.time || 0) - (a.time || 0));
+
+            if (allTrades.length === 0) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">Tidak ada posisi atau riwayat</div>';
+                return;
+            }
+
+            container.innerHTML = allTrades.map(trade => {
+                const { isOpen, symbol, trade_type, volume, open_price, close_price, pnl, open_time, close_time, id, status, stop_loss, take_profit, trigger_price } = trade;
+                const currentPrice = tradingApp.currentPrice.close || 0;
+                
+                const isPending = status === 'pending';
+                const livePnl = !isPending && isOpen ? (trade_type === 'buy' ? (currentPrice - open_price) * volume * 100 : (open_price - currentPrice) * volume * 100) : pnl;
+                
+                const openTimeStr = open_time ? new Date(open_time).toLocaleString('sv-SE').replace(' ', ' ') : 'N/A';
+                const closeTimeStr = close_time ? new Date(close_time).toLocaleString('sv-SE').replace(' ', ' ') : '';
+
+                const pnlClass = livePnl >= 0 ? "positive" : "negative";
+                const typeClass = trade_type.startsWith('buy') ? 'trade-type-buy' : 'trade-type-sell';
+                const isExpanded = expandedTradeIds.has(String(id));
+
+                return `
+                <div class="trade-item-container" data-trade-id="${id}" data-status="${status || 'closed'}">
+                    <div class="trade-item-summary" onclick="toggleTradeDetails(this)">
+                        <div class="trade-symbol-info">
+                            ${symbol} <span class="trade-type ${typeClass}">${trade_type.replace(/_/g, ' ')} ${volume.toFixed(2)}</span>
+                            ${isPending ? `<span class="status-badge pending" style="font-size: 0.7rem; background: #ffc107; color: #333; padding: 2px 4px; border-radius: 3px; margin-left: 5px;">PENDING</span>` : ''}
+                        </div>
+                        <div class="trade-time">
+                            ${isOpen ? openTimeStr : closeTimeStr}
+                        </div>
+                        <div class="trade-prices">
+                             ${isPending ? `Triggers @ ${(trigger_price || 0).toFixed(3)}` : `${(open_price || 0).toFixed(3)} → ${isOpen ? currentPrice.toFixed(3) : (close_price || 0).toFixed(3)}`}
+                        </div>
+                        <div class="trade-pnl ${pnlClass}">
+                            ${isPending ? '—' : (livePnl || 0).toFixed(2)}
+                        </div>
+                    </div>
+                    <div class="trade-item-details" style="display: ${isExpanded ? 'block' : 'none'};">
+                        <div class="detail-row"><span>S/L:</span><span>${stop_loss || '—'}</span></div>
+                        <div class="detail-row"><span>T/P:</span><span>${take_profit || '—'}</span></div>
+                        <div class="detail-row"><span>ID:</span><span>${id}</span></div>
+                        <div class="detail-row"><span>Open Time:</span><span>${openTimeStr}</span></div>
+                        <div class="detail-row"><span>Swap:</span><span>0.00</span></div>
+                        <div class="detail-row"><span>Pajak:</span><span>0.00</span></div>
+                        <div class="detail-row"><span>Komisi:</span><span>0.00</span></div>
+                        ${isOpen && !isPending ? `<button class="close-btn-details" onclick="closePosition(${id})">Tutup Posisi</button>` : ''}
+                        ${isPending ? `<button class="close-btn-details" style="background-color: #dc3545;" onclick="cancelPendingOrder(${id})">Cancel Order</button>` : ''}
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+
+        async function initializeAppForUser(token = null) {
+            try {
+                const user = await apiClient.getCurrentUser(token);
+                tradingApp.user = user;
+                updateUIAfterLogin();
+                updateAccountInfo();
+                try {
+                    const trades = await apiClient.getTrades(token);
+                    tradingApp.positions = trades;
+                } catch (tradeError) {
+                    showNotification("Could not load open trades.", "error");
+                    tradingApp.positions = [];
+                }
+                try {
+                    const history = await apiClient.getHistory(token);
+                    tradingApp.history = history;
+                } catch (historyError) {
+                    showNotification("Could not load trade history.", "error");
+                    tradingApp.history = [];
+                }
+                updateTradesList();
+                updateAccountInfo();
+            } catch (error) {
+                showNotification("Your session is invalid or has expired. Please log in.", "error");
+                logout();
+            }
+        }
+        
+        async function handleTradeFormSubmit(event) {
+            event.preventDefault();
+            if (!tradingApp.isConnected || !tradingApp.user) {
+                showNotification("Please login to trade", "error");
+                return;
+            }
+            const form = event.target;
+            const tradeType = form['trade-type'].value;
+            const isPending = tradeType.includes('stop');
+            
+            const tradeData = {
+                symbol: tradingApp.currentSymbol,
+                trade_type: tradeType,
+                volume: parseFloat(form['volume'].value),
+                stop_loss: parseFloat(form['stop-loss'].value) || null,
+                take_profit: parseFloat(form['take-profit'].value) || null,
+            };
+
+            if (isPending) {
+                tradeData.trigger_price = parseFloat(form['trigger-price'].value);
+                if (!tradeData.trigger_price || tradeData.trigger_price <= 0) {
+                    showNotification("A valid trigger price is required for pending orders.", "error");
+                    return;
+                }
+            } else {
+                tradeData.open_price = tradeType === 'buy' ? tradingApp.currentPrice.ask : tradingApp.currentPrice.bid;
+            }
+
+            try {
+                await apiClient.createTrade(tradeData);
+                await initializeAppForUser();
+                showNotification("Trade order placed successfully", "success");
+                closeTradeModal();
+            } catch (error) {
+                showNotification(error.message || "Failed to place trade.", "error");
+            }
+        }
+        
+        async function handleCloseAll() {
+            if (!tradingApp.user || tradingApp.positions.filter(p => p.status === 'open').length === 0) {
+                showNotification("No open positions to close.", "info");
+                return;
+            }
+            if (!confirm("Are you sure you want to close all open positions?")) return;
+            try {
+                const prices = { [tradingApp.currentSymbol]: tradingApp.currentPrice.close };
+                const result = await apiClient.closeAllTrades(prices);
+                showNotification(`${result.closed_count} position(s) closed.`, "success");
+                await initializeAppForUser();
+            } catch (error) {
+                showNotification(error.message || "Failed to close all trades.", "error");
+            }
+        }
+
+        async function cancelPendingOrder(tradeId) {
+            showNotification("Cancel order feature requires backend update.", "info");
+            // This function is a placeholder. A specific backend endpoint is needed to safely
+            // delete a pending order without treating it as a closed trade with PnL.
+            // For example, it would call: await apiClient.cancelTrade(tradeId);
+            console.warn("`cancelPendingOrder` requires a dedicated backend endpoint.");
+        }
+
+        async function checkTriggers() {
+            if (!apiClient.isLoggedIn() || !tradingApp.currentPrice.close > 0) return;
+            try {
+                const prices = { [tradingApp.currentSymbol]: tradingApp.currentPrice.close };
+                const updatedUser = await apiClient.checkTriggers({ prices });
+                
+                const openTradesChanged = tradingApp.positions.length !== updatedUser.trades.length;
+
+                // Update user data regardless
+                tradingApp.user = updatedUser;
+                
+                // If number of trades has changed, do a full refresh of positions.
+                if (openTradesChanged) {
+                    console.log("Triggers checked, trade change detected. Refreshing data.");
+                    await initializeAppForUser(); 
+                } else {
+                    // Otherwise, just update equity and PnL display
+                    updatePositionsPnL();
+                    updateAccountInfo();
+                }
+            } catch(error) {
+                // Don't show notification for background task
+                console.error("Error checking triggers:", error);
+            }
+        }
+
+        async function closePosition(tradeId) {
+             if (!tradingApp.isConnected || !tradingApp.user) {
+                showNotification("Cannot close position, not connected or not logged in.", "error");
+                return;
+            }
+            const closePrice = tradingApp.currentPrice.close;
+            try {
+                const historyItem = await apiClient.closeTrade(tradeId, closePrice);
+                await initializeAppForUser();
+                showNotification(`Position closed. PnL: $${historyItem.pnl.toFixed(2)}`, "success");
+            } catch (error) {
+                showNotification(error.message, "error");
+            }
+        }
+
+        function updateUIAfterLogin() {
+            if (tradingApp.user) {
+                document.getElementById("guest-profile").style.display = "none";
+                document.getElementById("user-profile").style.display = "flex";
+                document.getElementById("auth-section").style.display = "none";
+                document.getElementById("account-management").style.display = "block";
+                document.getElementById("logout-btn").style.display = "flex";
+                document.getElementById("sidebar-username").textContent = tradingApp.user.full_name;
+                document.getElementById("sidebar-userid").textContent = `ID: ${tradingApp.user.id}`;
+            } else {
+                document.getElementById("guest-profile").style.display = "flex";
+                document.getElementById("user-profile").style.display = "none";
+                document.getElementById("auth-section").style.display = "block";
+                document.getElementById("account-management").style.display = "none";
+                document.getElementById("logout-btn").style.display = "none";
+            }
+        }
+        
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
+            try {
+                const loginData = await apiClient.login(email, password);
+                await initializeAppForUser(loginData.access_token);
+                closeAuthModal();
+                showNotification("Login successful!", "success");
+            } catch (error) {
+                showNotification(error.message, "error");
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            const fullName = document.getElementById("register-fullname").value;
+            const email = document.getElementById("register-email").value;
+            const password = document.getElementById("register-password").value;
+            try {
+                await apiClient.register(email, password, fullName);
+                const loginData = await apiClient.login(email, password);
+                await initializeAppForUser(loginData.access_token);
+                closeAuthModal();
+                showNotification("Registration successful! You are now logged in.", "success");
+            } catch (error) {
+                showNotification(error.message, "error");
+            }
+        }
+
+        function logout() {
+            apiClient.logout();
+            tradingApp.user = null;
+            tradingApp.positions = [];
+            tradingApp.history = [];
+            updateUIAfterLogin();
+            updateAccountInfo();
+            updateTradesList();
+            closeSidebar();
+            showNotification("You have been logged out.", "info");
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll(".view-content").forEach(v => v.classList.remove("active"));
+            document.getElementById(viewId).classList.add("active");
+            document.querySelectorAll('.top-navbar, .chart-header-modern').forEach(h => h.style.display = 'none');
+            const headerId = {
+                "market-view": "market-header",
+                "chart-view": "chart-header-new",
+                "trade-view": "trade-header",
+            }[viewId];
+             if (headerId) document.getElementById(headerId).style.display = 'flex';
+            document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+            document.querySelector(`.nav-item[data-view="${viewId}"]`).classList.add("active");
+        }
+
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("open");
+            document.getElementById("sidebar-overlay").classList.toggle("open");
+        }
+        
+        function closeSidebar() {
+            document.getElementById("sidebar").classList.remove("open");
+            document.getElementById("sidebar-overlay").classList.remove("open");
+        }
+
+        function showLoginModal() { closeAuthModal(); document.getElementById("login-modal").style.display = "flex"; }
+        function showRegisterModal() { closeAuthModal(); document.getElementById("register-modal").style.display = "flex"; }
+        function closeAuthModal() {
+            document.getElementById("login-modal").style.display = "none";
+            document.getElementById("register-modal").style.display = "none";
+        }
+        
+        function openTradeModal(type = null) {
+            if (!tradingApp.isConnected || !tradingApp.user) {
+                showNotification("Please login to trade", "error");
+                return;
+            }
+            const modal = document.getElementById("trade-modal");
+            const form = document.getElementById("trade-form-modal");
+            form.reset(); 
+            
+            if (type) {
+                document.getElementById('trade-type').value = type;
+            }
+            
+            document.getElementById('trade-volume').value = tradingApp.currentLot;
+
+            // Manually trigger change to show/hide trigger price field
+            document.getElementById('trade-type').dispatchEvent(new Event('change'));
+
+            modal.style.display = "flex";
+        }
+
+        function closeTradeModal() { document.getElementById("trade-modal").style.display = "none"; }
+        function openLotModal() {
+            document.getElementById("lot-modal").style.display = "flex";
+            document.getElementById("lot-input").value = tradingApp.currentLot;
+        }
+        function closeLotModal() { document.getElementById("lot-modal").style.display = "none"; }
+        
+        function setLotSize() {
+            const newLot = parseFloat(document.getElementById("lot-input").value);
+            if (newLot >= 0.01 && newLot <= 10) {
+                tradingApp.currentLot = newLot;
+                document.getElementById("current-lot").textContent = newLot.toFixed(2);
+                closeLotModal();
+            }
+        }
+        
+        function adjustLotSize(delta) {
+            let newLot = tradingApp.currentLot + delta;
+            newLot = Math.round(newLot * 100) / 100;
+            if (newLot >= 0.01 && newLot <= 10) {
+                tradingApp.currentLot = newLot;
+                document.getElementById("current-lot").textContent = newLot.toFixed(2);
+            }
+        }
+
+        const notificationQueue = [];
+        let isNotificationVisible = false;
+        function processNotificationQueue() {
+            if (isNotificationVisible || notificationQueue.length === 0) return;
+            isNotificationVisible = true;
+            const { message, type, duration } = notificationQueue.shift();
+            const container = document.getElementById("notification-container") || document.body;
+            const notificationEl = document.createElement("div");
+            notificationEl.className = `notification ${type}`;
+            notificationEl.textContent = message;
+            notificationEl.style.top = '20px';
+            container.appendChild(notificationEl);
+            setTimeout(() => { notificationEl.classList.add('show'); }, 10);
+            setTimeout(() => {
+                notificationEl.classList.remove('show');
+                notificationEl.addEventListener('transitionend', () => {
+                    if (notificationEl.parentElement) notificationEl.remove();
+                    isNotificationVisible = false;
+                    processNotificationQueue();
+                }, { once: true });
+            }, duration);
+        }
+        function showNotification(message, type = "info", duration = 3000) {
+            notificationQueue.push({ message, type, duration });
+            processNotificationQueue();
+        }
+        
+        function showNewsModal() { showNotification("News feature coming soon", "info"); }
+        function showMailboxModal() { showNotification("Mailbox feature coming soon", "info"); }
+        function showAnalysisModal() { showNotification("Analysis feature coming soon", "info"); }
+        function showSettingsModal() { showNotification("Settings feature coming soon", "info"); }
+        function showEconomicCalendar() { showNotification("Calendar feature coming soon", "info"); }
+        function showCommunityModal() { showNotification("Community feature coming soon", "info"); }
+        function showAITradingModal() { showNotification("AI Trading feature coming soon", "info"); }
+        function showHelpModal() { showNotification("Help feature coming soon", "info"); }
+        function showAccountModal() { showNotification("Account Management coming soon", "info"); }
+        function showTopUpModal() { showNotification("Top Up coming soon", "info"); }
+        function showTransactionHistory() { showNotification("Transaction History coming soon", "info"); }
+
+        function initializeTradingViewWidget() {
+            if (typeof TradingView === 'undefined') return;
+            window.tvWidget = new TradingView.widget({
+                "container_id": "tradingview_chart", "autosize": true, "symbol": tradingApp.currentTradingViewSymbol,
+                "interval": "D", "timezone": "Etc/UTC", "theme": "light", "style": "1", "locale": "en",
+                "enable_publishing": false, "allow_symbol_change": true, "hide_side_toolbar": true
+            });
+        }
+
+        function updateSymbolDisplay() {
+            document.getElementById('dynamic-title').textContent = `${tradingApp.currentSymbolDisplay} Trading Platform Pro`;
+            if (window.tvWidget) {
+                window.tvWidget.remove();
+            }
+            if (typeof TradingView !== 'undefined') {
+                window.tvWidget = new TradingView.widget({
+                    "container_id": "tradingview_chart", "autosize": true, "symbol": tradingApp.currentTradingViewSymbol,
+                    "interval": "D", "timezone": "Etc/UTC", "theme": "light", "style": "1", "locale": "en",
+                    "enable_publishing": false, "allow_symbol_change": true, "hide_side_toolbar": true
+                });
+            }
+        }
+
+        function changeSymbol(newSymbol) {
+            const symbolMappings = { 'BTCUSD': { display: 'BTCUSD', tradingView: 'COINBASE:BTCUSD' } };
+            if (symbolMappings[newSymbol]) {
+                tradingApp.currentSymbol = newSymbol;
+                tradingApp.currentSymbolDisplay = symbolMappings[newSymbol].display;
+                tradingApp.currentSymbolDisplay = symbolMappings[newSymbol].tradingView;
+                updateSymbolDisplay();
+            }
+        }
+
+        (async function () {
+            document.querySelectorAll(".nav-item").forEach(item => {
+                item.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const viewId = item.getAttribute("data-view");
+                    if (viewId) switchView(viewId);
+                });
+            });
+            document.querySelectorAll('.menu-icon, #sidebar-overlay, [id^="menu-toggle-"]').forEach(el => {
+                el.addEventListener('click', toggleSidebar);
+            });
+            document.getElementById("login-form").addEventListener("submit", handleLogin);
+            document.getElementById("register-form").addEventListener("submit", handleRegister);
+            document.getElementById("trade-form-modal").addEventListener("submit", handleTradeFormSubmit);
+            document.getElementById("close-all-btn").addEventListener("click", handleCloseAll);
+
+            // Show/hide trigger price field based on order type
+            document.getElementById('trade-type').addEventListener('change', function() {
+                const triggerPriceGroup = document.getElementById('trigger-price-group');
+                if (this.value.includes('stop')) {
+                    triggerPriceGroup.style.display = 'block';
+                } else {
+                    triggerPriceGroup.style.display = 'none';
+                }
+            });
+
+            try {
+                const [configResponse, symbolsResponse] = await Promise.all([ fetch('/config'), fetch('/symbols') ]);
+                const config = await configResponse.json();
+                const symbolMappings = await symbolsResponse.json();
+                tradingApp.symbolMappings = symbolMappings;
+                const configuredSymbol = config.symbol;
+                if (tradingApp.symbolMappings[configuredSymbol]) {
+                    tradingApp.currentSymbol = configuredSymbol;
+                    tradingApp.currentSymbolDisplay = tradingApp.symbolMappings[configuredSymbol].display;
+                    tradingApp.currentTradingViewSymbol = tradingApp.symbolMappings[configuredSymbol].tradingView;
+                } else {
+                    const symbols = Object.keys(tradingApp.symbolMappings);
+                    if (symbols.length > 0) {
+                        tradingApp.currentSymbol = symbols[0];
+                        tradingApp.currentSymbolDisplay = tradingApp.symbolMappings[symbols[0]].display;
+                        tradingApp.currentTradingViewSymbol = tradingApp.symbolMappings[symbols[0]].tradingView;
+                    }
+                }
+            } catch (error) {
+                console.error("❌ Failed to load configuration from backend:", error);
+                tradingApp.symbolMappings = { 'CRYPTO:BTCUSD': { display: 'BTCUSD', tradingView: 'COINBASE:BTCUSD' } };
+                tradingApp.currentSymbol = 'CRYPTO:BTCUSD';
+                tradingApp.currentSymbolDisplay = 'BTCUSD';
+                tradingApp.currentTradingViewSymbol = 'COINBASE:BTCUSD';
+            }
+            
+            initializeTradingViewWidget();
+            connectWebSocket();
+            
+            if (apiClient.isLoggedIn()) {
+                await initializeAppForUser();
+            } else {
+                updateUIAfterLogin();
+            }
+
+            // Periodically check for SL/TP/Pending order triggers
+            setInterval(checkTriggers, 3000); // Check every 3 seconds
+        })();
+    </script>
+  </body>
+</html>
